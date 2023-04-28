@@ -1,0 +1,54 @@
+const API_KEY = 'b7188fc2570709a7ac428d07148bd3ca-3e51f8d2-e570ff5d';
+const DOMAIN = 'anticlockwise.sg';
+
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+
+const mailgun = new Mailgun(formData);
+const client = mailgun.client({ username: 'api', key: API_KEY });
+const title = 'Testing';
+const slug = 'test';
+const name = 'Gema Test';
+const item_url = 'https://www.guess.com.ph/product/es-dillon-jacket-modi00025';
+const img_url = 'https://www.guess.com.ph/sites/default/files/item/MODI00025MWA/MODI00025MWA-1.jpg';
+const price = '₱ 5,698.00';
+
+const data = {
+  from: 'Mailgun Sandbox <postmaster@guessph.com.ph>',
+  to: 'gema.reza@ematicsolutions.com',
+  subject: `Email ${title}`,
+  template: 'test',
+  'h:X-Mailgun-Variables': JSON.stringify({ // be sure to stringify your payload
+    title,
+    slug,
+    items: [{
+        name,
+        item_url,
+        img_url,
+        price
+    },
+    {
+        name,
+        item_url,
+        img_url,
+        price
+    }
+    ]
+  }),
+//   "user-variables": {
+//       "items":[
+//           {
+//             "name": name,
+//             "item_url": item_url,
+//             "img_url": img_url
+//         }
+//       ]
+//   }
+};
+
+client.messages.create(DOMAIN, data).then((res) => {
+  console.log(res);
+})
+  .catch((err) => {
+    console.error(err);
+});
